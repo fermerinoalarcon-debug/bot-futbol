@@ -1,0 +1,20 @@
+{
+  "zona_horaria": "America/Santiago",
+  "hora_resumen_diario": 9,
+
+  "liga_principal": {"codigo": "chi.1", "nombre": "Primera División"},
+
+  "otras_competencias_favoritos": {
+    "chi.copa_chi": "Copa Chile",
+    "conmebol.libertadores": "Copa Libertadores",
+    "conmebol.sudamericana": "Copa Sudamericana"
+  },
+
+  "favoritos": ["Universidad de Chile", "Colo Colo"],
+
+  "avisar_entretiempo_y_final": "todos",
+  "_nota_avisar": "'todos' = todos los partidos de Primera del día; 'favoritos' = solo U, Colo-Colo, etc.",
+
+  "minutos_por_ejecucion": 55,
+  "segundos_entre_consultas": 120
+}

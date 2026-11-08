@@ -1,0 +1,47 @@
+name: Bot futbol
+
+on:
+  schedule:
+    # Cada hora entre las 8:00 y las 0:00 de Chile (horario de verano, UTC-3).
+    # Cada ejecución vigila los partidos hasta ~55 minutos y termina sola si no hay nada.
+    - cron: "3 0-3,11-23 * * *"
+  workflow_dispatch:
+    inputs:
+      modo:
+        description: "auto, resumen, envivo o prueba"
+        default: "prueba"
+
+concurrency:
+  group: bot-futbol
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  bot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 65
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Ejecutar bot
+        env:
+          RECIPIENTS: ${{ secrets.RECIPIENTS }}
+          GREEN_API_URL: ${{ secrets.GREEN_API_URL }}
+          GREEN_ID: ${{ secrets.GREEN_ID }}
+          GREEN_TOKEN: ${{ secrets.GREEN_TOKEN }}
+          CHAT_ID: ${{ secrets.CHAT_ID }}
+        run: python bot.py ${{ github.event.inputs.modo || 'auto' }}
+
+      - name: Guardar estado (para no repetir avisos)
+        if: always()
+        run: |
+          git config user.name "bot-futbol"
+          git config user.email "bot-futbol@users.noreply.github.com"
+          git add estado.json || true
+          git diff --cached --quiet || (git commit -m "estado" && git push)
